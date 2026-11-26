@@ -117,10 +117,12 @@ export const destinations: Destination[] = [
   },
 ];
 
-export const allDestinations: Destination[] = [
-  ...destinations,
-  ...popularPlaces.filter((place) => !destinations.some((existing) => existing.country === place.country)),
-];
+const destinationByCountry = new Map(popularPlaces.map((place) => [place.country, place]));
+for (const destination of destinations) destinationByCountry.set(destination.country, destination);
+
+// Keep one map marker and one country entry, while letting the hand-curated
+// destinations above replace their generated country highlights.
+export const allDestinations: Destination[] = [...destinationByCountry.values()];
 
 export const imageUrl = (id: string, width = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;

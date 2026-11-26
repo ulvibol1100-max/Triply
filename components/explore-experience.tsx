@@ -8,6 +8,7 @@ import { DestinationCard } from "@/components/destination-card";
 import { allDestinations, imageUrl } from "@/lib/destinations";
 import { destinationForCountry } from "@/lib/popular-places";
 import { preloadCountryProvinceMap, WorldMap } from "@/components/world-map";
+import { DestinationImage } from "@/components/destination-image";
 
 const categories = ["All places", "Island life", "Culture", "City break"];
 const countries = [...new Set(allDestinations.map((destination) => destination.country))];
@@ -25,7 +26,6 @@ export function ExploreExperience() {
   const selectedCountryPlaces = allDestinations.filter((destination) =>
     destination.country === country && (!selectedRegion || destination.regionCode === selectedRegion.code),
   );
-  const selectedPlace = allDestinations.find((destination) => destination.slug === selectedPlaceSlug);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -131,24 +131,32 @@ export function ExploreExperience() {
               </>
             ) : (
               <>
-                <p className="eyebrow">A little inspiration from</p>
-                <h3 className="editorial mt-3 text-3xl leading-tight">{selectedPlace?.name ?? selectedRegion?.name ?? country}</h3>
+                <p className="eyebrow">Popular places in</p>
+                <h3 className="editorial mt-3 text-3xl leading-tight">{selectedRegion?.name ?? country}</h3>
                 <p className="mt-2 text-[11px] text-[#65756f]">
-                  {selectedPlace ? `${selectedPlace.region} · ${country}` : selectedRegion ? `Province or region · ${country}` : `${selectedCountryPlaces.length} ${selectedCountryPlaces.length === 1 ? "popular place" : "popular places"}`}
+                  {selectedRegion ? `Province or region · ${country}` : `${selectedCountryPlaces.length} ${selectedCountryPlaces.length === 1 ? "popular place" : "popular places"}`}
                 </p>
-                {selectedPlace && <p className="mt-4 text-[12px] leading-5 text-[#65756f]">{selectedPlace.description}</p>}
                 {selectedCountryPlaces.length ? (
-                  <div className="mt-5 divide-y divide-[#e7e9e3]">
+                  <div className="mt-5 space-y-4">
                     {selectedCountryPlaces.map((destination) => (
-                      <div key={destination.slug} className="flex items-center justify-between gap-3 py-3">
-                        <div className="min-w-0">
-                          <button type="button" aria-pressed={selectedPlaceSlug === destination.slug} onClick={() => selectPlace(destination.country, destination.slug)} className={`block text-left text-[13px] font-extrabold transition hover:text-[#2563eb] ${selectedPlaceSlug === destination.slug ? "text-[#2563eb]" : ""}`}>{destination.name}</button>
-                          <button type="button" aria-label={`Select ${destination.region} province or region`} aria-pressed={selectedRegion?.code === destination.regionCode} onClick={() => selectRegion(destination.country, destination.regionCode, destination.region)} className="mt-1 block text-left text-[10px] text-[#65756f] transition hover:text-[#2563eb]">Province / state · {destination.region}</button>
+                      <article key={destination.slug} className="grid gap-4 border-t border-[#e7e9e3] pt-4 sm:grid-cols-[140px_1fr]">
+                        <div className="image-wrap relative aspect-[1.35] overflow-hidden rounded-sm bg-[#e8ebe6] sm:aspect-square">
+                          <DestinationImage destination={destination} sizes="(max-width: 640px) 90vw, 140px" className="object-cover" />
                         </div>
-                        <Link href={`/destinations/${destination.slug}`} aria-label={`View ${destination.name} details`} className="grid size-8 shrink-0 place-items-center rounded-full text-[#789185] transition hover:bg-[#e9f0ed] hover:text-[#2563eb]">
-                          <ArrowUpRight size={15} />
-                        </Link>
-                      </div>
+                        <div className="min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <button type="button" aria-pressed={selectedPlaceSlug === destination.slug} onClick={() => selectPlace(destination.country, destination.slug)} className={`text-left text-[15px] font-extrabold transition hover:text-[#2563eb] ${selectedPlaceSlug === destination.slug ? "text-[#2563eb]" : ""}`}>{destination.name}</button>
+                            <Link href={`/destinations/${destination.slug}`} aria-label={`View ${destination.name} details`} className="grid size-8 shrink-0 place-items-center rounded-full text-[#789185] transition hover:bg-[#e9f0ed] hover:text-[#2563eb]">
+                              <ArrowUpRight size={15} />
+                            </Link>
+                          </div>
+                          <button type="button" aria-label={`Select ${destination.region} province or region`} aria-pressed={selectedRegion?.code === destination.regionCode} onClick={() => selectRegion(destination.country, destination.regionCode, destination.region)} className="mt-1 block text-left text-[10px] font-semibold text-[#65756f] transition hover:text-[#2563eb]">Province / state · {destination.region}</button>
+                          <p className="mt-3 text-[11px] leading-5 text-[#65756f]">{destination.description}</p>
+                          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[9px] font-semibold text-[#52645c]">
+                            <span>{destination.bestFor}</span><span>{destination.duration}</span><span>${destination.budget} / day</span>
+                          </div>
+                        </div>
+                      </article>
                     ))}
                   </div>
                 ) : (

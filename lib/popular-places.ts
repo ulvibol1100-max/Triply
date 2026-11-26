@@ -214,7 +214,7 @@ export const popularPlaces: Destination[] = countries.features.map(({ properties
     regionCode: `popular-${properties.code}`,
     latitude: seed.latitude,
     longitude: seed.longitude,
-    description: `A popular place to explore in ${properties.name}, included as a country-by-country starting point inspired by the TripAdvisor/Vouchercloud map.`,
+    description: `${seed.name} is a popular highlight in ${seed.region}, ${properties.name}. Use it as a starting point for exploring the region and planning your trip.`,
     category: seed.category ?? "Culture",
     budget: 100,
     image: "photo-1469474968028-56623f02e42e",

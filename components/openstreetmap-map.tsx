@@ -29,7 +29,9 @@ type CountryFeature = {
   geometry: GeoJsonObject;
 };
 
-const countryFeatures = countryMap.features as CountryFeature[];
+const countryFeatures = [...new Map(
+  (countryMap.features as CountryFeature[]).map((feature) => [feature.properties.code, feature]),
+).values()];
 
 type MapViewportProps = {
   selectedCountry: string;
@@ -126,6 +128,7 @@ export function OpenStreetMapMap({
         zoom={2}
         minZoom={2}
         maxZoom={19}
+        maxBounds={[[-85, -180], [85, 180]]}
         scrollWheelZoom={false}
         zoomControl={false}
         className="h-full w-full bg-[#e8eef0]"
@@ -134,6 +137,8 @@ export function OpenStreetMapMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
+          noWrap
+          bounds={[[-85, -180], [85, 180]]}
         />
         <ZoomControl position="topright" />
         {countryFeatures.map((feature) => {
