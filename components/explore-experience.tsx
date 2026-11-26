@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDownUp, ArrowRight, ArrowUpRight, Check, ChevronDown, LayoutGrid, List, Search, SlidersHorizontal, X } from "lucide-react";
 import { DestinationCard } from "@/components/destination-card";
-import { allDestinations, destinations, imageUrl } from "@/lib/destinations";
+import { allDestinations, imageUrl } from "@/lib/destinations";
 import { destinationForCountry } from "@/lib/popular-places";
 import { preloadCountryProvinceMap, WorldMap } from "@/components/world-map";
 

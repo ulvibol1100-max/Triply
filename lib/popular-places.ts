@@ -191,10 +191,10 @@ const places: Record<string, PlaceSeed> = {
   Zimbabwe: { name: "Victoria Falls", region: "Matabeleland North Province", latitude: -17.9243, longitude: 25.8572 },
 };
 
-const extraTerritoryPlaces: Record<string, PlaceSeed> = {
-  "United States": places["United States of America"],
-  Tanzania: places["United Republic of Tanzania"],
-  Serbia: places["Republic of Serbia"],
+const extraTerritoryCountryNames: Record<string, string> = {
+  "United States": "United States of America",
+  Tanzania: "United Republic of Tanzania",
+  Serbia: "Republic of Serbia",
 };
 
 const slugify = (value: string) => value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -226,4 +226,5 @@ export const popularPlaces: Destination[] = countries.features.map(({ properties
 });
 
 export const popularPlacesByCountry = new Map(popularPlaces.map((place) => [place.country, place]));
-export const destinationForCountry = (country: string) => popularPlacesByCountry.get(country) ?? extraTerritoryPlaces[country];
+export const destinationForCountry = (country: string): Destination | undefined =>
+  popularPlacesByCountry.get(country) ?? popularPlacesByCountry.get(extraTerritoryCountryNames[country] ?? "");
